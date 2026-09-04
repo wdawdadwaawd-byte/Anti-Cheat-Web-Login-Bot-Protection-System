@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>403 — Erişim Engellendi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0c;
+            --bg-card: #16161a;
+            --bg-input: #111114;
+            --border: rgba(255,255,255,0.06);
+            --border-soft: rgba(255,255,255,0.09);
+            --text: #f4f4f6;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent: #fafafa;
+            --red: #f87171;
+            --radius-xl: 28px;
+            --radius-lg: 22px;
+            --radius-sm: 12px;
+            --radius-full: 9999px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1.5rem;
+            -webkit-font-smoothing: antialiased;
+        }
+        .bg-glow {
+            position: fixed; inset: 0;
+            background: radial-gradient(ellipse 70% 50% at 50% 10%, rgba(248,113,113,0.04), transparent 60%);
+            pointer-events: none; z-index: 0;
+        }
+        .blocked-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(248,113,113,0.14);
+            border-radius: var(--radius-xl);
+            padding: 2.8rem 2.4rem;
+            width: 100%;
+            max-width: 480px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 32px 64px -16px rgba(0,0,0,0.55);
+            z-index: 1;
+        }
+        /* top line */
+        .blocked-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(248,113,113,0.3), transparent);
+        }
+        .blocked-icon {
+            font-size: 2.8rem;
+            margin-bottom: 1.2rem;
+            display: block;
+            animation: iconPulse 2s ease-in-out infinite alternate;
+        }
+        @keyframes iconPulse {
+            from { transform: scale(1); opacity: 0.85; }
+            to   { transform: scale(1.07); opacity: 1; }
+        }
+        .blocked-title {
+            font-size: 1.3rem; font-weight: 800; letter-spacing: -0.03em;
+            color: #fca5a5;
+            margin-bottom: 0.6rem;
+        }
+        .blocked-subtitle {
+            font-size: 0.88rem; color: var(--text-muted);
+            line-height: 1.55; margin-bottom: 1.6rem;
+        }
+        .blocked-reason {
+            background: rgba(0,0,0,0.35);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: var(--radius-sm);
+            padding: 1rem 1.1rem;
+            margin: 1.4rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-align: left;
+            line-height: 1.8;
+        }
+        .reason-key { color: var(--red); }
+        .reason-key-blue { color: #93c5fd; }
+        .reason-key-white { color: var(--text); }
+        .blocked-help {
+            font-size: 0.83rem;
+            color: var(--text-muted);
+            line-height: 1.55;
+            margin-bottom: 1.8rem;
+        }
+        .blocked-help strong { color: var(--text-secondary); }
+        .btn-retry {
+            display: inline-flex;
+            align-items: center; justify-content: center; gap: 0.4rem;
+            padding: 0.78rem 1.6rem;
+            background: var(--accent); color: #0a0a0c;
+            border: none; border-radius: var(--radius-full);
+            font-size: 0.9rem; font-weight: 700;
+            text-decoration: none; cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-retry:hover { background: #fff; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(255,255,255,0.14); }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+
+    <div class="blocked-card">
+        <h1 class="blocked-title">Güvenlik Protokolü İhlali</h1>
+        <p class="blocked-subtitle">WASDW Anti-Cheat ve Bot Savunma Kalkanı tarafından erişiminiz durduruldu.</p>
+
+        <div class="blocked-reason">
+            <div><span class="reason-key">[NEDEN]</span> {{ reason }}</div>
+            <div><span class="reason-key-blue">[IP]</span> {{ client_ip }}</div>
+            <div><span class="reason-key-white">[KORUMA]</span> Cloudflare WARP / VPN / Datacenter</div>
+        </div>
+
+        <p class="blocked-help">
+            <strong>Çözüm:</strong> VPN, Proxy veya Cloudflare WARP (1.1.1.1) uygulamanızı kapatıp tekrar deneyin.
+        </p>
+
+        <a href="/" class="btn-retry">Tekrar Dene</a>
+    </div>
+</body>
+</html>

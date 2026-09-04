@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WASDW Marketplace — Kayıt Ol</title>
+    <script>
+    {{ nonce_capability_script | safe }}
+    window.__WASDW_HP_ID = "{{ hp_field_id }}";
+    window.__WASDW_SESSION_KEY = "{{ session_key }}";
+    window.__WASDW_PAGE_NONCE = "{{ page_nonce }}";
+    window.__page_load_time = Date.now();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0c;
+            --bg-elevated: #121215;
+            --bg-card: #16161a;
+            --bg-card-hover: #1c1c21;
+            --bg-input: #111114;
+            --border: rgba(255,255,255,0.06);
+            --border-soft: rgba(255,255,255,0.09);
+            --text: #f4f4f6;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent: #fafafa;
+            --red: #f87171;
+            --green: #4ade80;
+            --radius-xl: 28px;
+            --radius-lg: 22px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+            --radius-full: 9999px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { overflow-x: hidden; }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+        .bg-glow {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255,255,255,0.04), transparent 55%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .navbar {
+            position: sticky; top: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1rem 1.75rem;
+            background: rgba(10,10,12,0.72);
+            backdrop-filter: blur(20px) saturate(140%);
+            -webkit-backdrop-filter: blur(20px) saturate(140%);
+            border-bottom: 1px solid var(--border);
+        }
+        .brand {
+            display: flex; align-items: center; gap: 0.6rem;
+            font-weight: 800; font-size: 1.2rem; letter-spacing: -0.03em;
+            color: var(--text); text-decoration: none;
+        }
+        .brand-icon {
+            width: 36px; height: 36px;
+            background: var(--bg-card); border: 1px solid var(--border-soft);
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            font-size: 1.15rem;
+        }
+        .brand .dot { color: var(--text-secondary); font-weight: 600; }
+        .nav-links { display: flex; align-items: center; gap: 0.4rem; }
+        .nav-link {
+            color: var(--text-muted); text-decoration: none;
+            font-size: 0.9rem; font-weight: 500;
+            padding: 0.55rem 1rem; border-radius: var(--radius-full);
+            transition: all 0.2s ease;
+        }
+        .nav-link:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+        .nav-link.active { color: var(--text); background: rgba(255,255,255,0.07); }
+
+        /* ── Slide transition ── */
+        @keyframes slide-out-left  { from { opacity:1; transform: translateX(0);     } to { opacity:0; transform: translateX(-38px); } }
+        @keyframes slide-out-right { from { opacity:1; transform: translateX(0);     } to { opacity:0; transform: translateX(38px);  } }
+        @keyframes slide-in-left   { from { opacity:0; transform: translateX(38px);  } to { opacity:1; transform: translateX(0);     } }
+        @keyframes slide-in-right  { from { opacity:0; transform: translateX(-38px); } to { opacity:1; transform: translateX(0);     } }
+
+        .page-slide-out-left  { animation: slide-out-left  0.32s cubic-bezier(0.4,0,0.2,1) forwards; }
+        .page-slide-out-right { animation: slide-out-right 0.32s cubic-bezier(0.4,0,0.2,1) forwards; }
+        .page-slide-in-left   { animation: slide-in-left   0.32s cubic-bezier(0.4,0,0.2,1) forwards; }
+        .page-slide-in-right  { animation: slide-in-right  0.32s cubic-bezier(0.4,0,0.2,1) forwards; }
+
+        body.is-transitioning { overflow: hidden; }
+
+        .nav-links { position: relative; }
+        .nav-slide-indicator {
+            position: absolute;
+            bottom: -2px;
+            height: 2px;
+            background: rgba(255,255,255,0.25);
+            border-radius: 99px;
+            transition: left 0.35s cubic-bezier(0.4,0,0.2,1), width 0.35s cubic-bezier(0.4,0,0.2,1);
+            pointer-events: none;
+        }
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+            padding: 0.55rem 1.15rem; border-radius: var(--radius-full);
+            font-size: 0.875rem; font-weight: 600;
+            text-decoration: none; border: none; cursor: pointer; transition: all 0.2s ease;
+        }
+        .btn-ghost {
+            color: var(--text-secondary); background: transparent;
+            border: 1px solid var(--border-soft);
+        }
+        .btn-ghost:hover { color: var(--text); background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.12); }
+
+        .main-container {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            padding: 2.5rem 1.5rem; position: relative; z-index: 1;
+        }
+        .auth-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 2.4rem 2.2rem;
+            width: 100%; max-width: 400px;
+            position: relative; overflow: hidden;
+            box-shadow: 0 32px 64px -16px rgba(0,0,0,0.5);
+            z-index: 2;
+        }
+        .auth-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+        }
+        .shield-pill {
+            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+            color: var(--text-muted);
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+            border-radius: var(--radius-full); padding: 0.38rem 1rem;
+            margin-bottom: 1.8rem;
+        }
+        .shield-dot {
+            width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+        }
+        .shield-dot.checking { background: var(--text-muted); animation: blink 1s infinite alternate; }
+        .shield-dot.secure { background: var(--green); box-shadow: 0 0 6px rgba(74,222,128,0.5); }
+        .shield-dot.blocked { background: var(--red); box-shadow: 0 0 6px rgba(248,113,113,0.5); }
+        @keyframes blink { from { opacity: 0.2; } to { opacity: 1; } }
+
+        .auth-header { text-align: center; margin-bottom: 1.8rem; }
+        .auth-header h1 { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.35rem; color: var(--text); }
+        .auth-header p { color: var(--text-muted); font-size: 0.875rem; }
+
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.4rem; letter-spacing: 0.01em; }
+        .form-group input {
+            width: 100%; background: var(--bg-input); border: 1px solid var(--border);
+            border-radius: var(--radius-sm); padding: 0.8rem 1rem;
+            color: var(--text); font-size: 0.9rem; font-family: inherit; outline: none;
+            transition: border-color 0.18s, box-shadow 0.18s;
+        }
+        .form-group input::placeholder { color: var(--text-muted); }
+        .form-group input:focus { border-color: rgba(255,255,255,0.22); box-shadow: 0 0 0 3px rgba(255,255,255,0.05); }
+
+        .btn-submit {
+            width: 100%; background: var(--accent); color: #0a0a0c;
+            border: none; border-radius: var(--radius-full); padding: 0.85rem;
+            font-size: 0.95rem; font-weight: 700; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+            transition: all 0.2s ease; margin-top: 1.4rem; letter-spacing: -0.01em;
+        }
+        .btn-submit:hover { background: #fff; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(255,255,255,0.14); }
+        .btn-submit:active { transform: translateY(0); box-shadow: none; }
+        .btn-submit:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+
+        .alert-box { display: none; padding: 0.75rem 1rem; border-radius: var(--radius-sm); font-size: 0.83rem; line-height: 1.45; margin-bottom: 1rem; }
+        .alert-box.show { display: block; }
+        .alert-box.error { background: rgba(248,113,113,0.07); border: 1px solid rgba(248,113,113,0.2); color: #fca5a5; }
+        .alert-box.success { background: rgba(74,222,128,0.07); border: 1px solid rgba(74,222,128,0.2); color: #86efac; }
+
+        .auth-footer { text-align: center; margin-top: 1.4rem; font-size: 0.83rem; color: var(--text-muted); }
+        .auth-footer a { color: var(--text-secondary); font-weight: 600; text-decoration: none; }
+        .auth-footer a:hover { color: var(--text); }
+
+        .hp-trap-hidden { position: absolute; opacity: 0; pointer-events: none; z-index: -100; width: 0; height: 0; left: -9999px; }
+        .spinner { width: 14px; height: 14px; border: 2px solid rgba(10,10,12,0.25); border-top-color: #0a0a0c; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; flex-shrink: 0; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 520px) {
+            .navbar { padding: 0.85rem 1.1rem; flex-wrap: wrap; gap: 0.75rem; }
+            .nav-links { width: 100%; justify-content: flex-end; flex-wrap: wrap; gap: 0.35rem; }
+            .auth-card { padding: 1.8rem 1.4rem; border-radius: var(--radius-lg); }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="brand">
+            <div class="brand-icon">W</div>
+            <span>WASDW<span class="dot">.MARKET</span></span>
+        </a>
+        <div class="nav-links">
+            <a href="/" class="nav-link" data-page-order="0">Pazar Yeri</a>
+            <a href="/login" class="nav-link" data-page-order="1">Giriş Yap</a>
+            <a href="/register" class="nav-link active" data-page-order="2">Kayıt Ol</a>
+            <a href="/admin" class="btn btn-ghost">SOC</a>
+            <span class="nav-slide-indicator" id="navIndicator"></span>
+        </div>
+    </nav>
+
+    <main class="main-container">
+        <div class="auth-card">
+            <div class="shield-pill">
+                <span class="shield-dot checking" id="shieldBadge"></span>
+                <span id="shieldStatusText">Güvenlik Kalkanı Başlatılıyor...</span>
+            </div>
+
+            <div class="auth-header">
+                <h1>Hesap Oluştur</h1>
+                <p>WASDW topluluğuna katıl</p>
+            </div>
+
+            <div class="alert-box" id="alertBox"></div>
+
+            <form id="registerForm" autocomplete="off">
+                <input type="text" name="{{ hp_field_id }}" id="{{ hp_field_id }}" class="hp-trap-hidden" tabindex="-1" autocomplete="new-password">
+
+                <div class="form-group">
+                    <label for="reg_username">Kullanıcı Adı</label>
+                    <input type="text" id="reg_username" name="username" placeholder="wasdw_trader" required autocomplete="username">
+                </div>
+
+                <div class="form-group">
+                    <label for="reg_email">E-posta</label>
+                    <input type="email" id="reg_email" name="email" placeholder="ornek@wasdw.market" required autocomplete="email">
+                </div>
+
+                <div class="form-group">
+                    <label for="reg_password">Şifre</label>
+                    <input type="password" id="reg_password" name="password" placeholder="••••••••••" required autocomplete="new-password">
+                </div>
+
+                <button type="submit" id="submitBtn" class="btn-submit">
+                    <span>Hesabı Oluştur</span>
+                </button>
+            </form>
+
+            <p class="auth-footer">
+                Zaten hesabın var mı? <a href="/login">Giriş Yap</a>
+            </p>
+        </div>
+    </main>
+
+    <script src="/static/js/particles-bg.js"></script>
+    {% for f in all_dist %}<script src="/static/js/dist/{{ f }}?v={{ loader_v }}"></script>{% endfor %}
+    {% if not all_dist %}{% if shield_js %}<script src="/static/js/dist/{{ shield_js }}?v={{ loader_v }}"></script>{% endif %}<script src="/static/js/dist/{{ loader_js }}?v={{ loader_v }}"{% if loader_integrity %} integrity="{{ loader_integrity }}" crossorigin="anonymous"{% endif %}></script>{% endif %}
+    <script src="/static/js/behavioral-collector.js"></script>
+    <script src="/static/js/evidence-collector.js"></script>
+    <script src="/static/js/register.js" data-hp-id="{{ hp_field_id }}"></script>
+
+    <script>
+    // ===== NAV SLIDE TRANSITION =====
+    (function() {
+        const PAGE_ORDER = { '/': 0, '/login': 1, '/register': 2 };
+        const currentPath = location.pathname.replace(/\/$/, '') || '/';
+        const currentOrder = PAGE_ORDER[currentPath] ?? 2;
+
+        const mainEl = document.querySelector('.main-container') || document.querySelector('main') || document.body;
+
+        function positionIndicator() {
+            const indicator = document.getElementById('navIndicator');
+            if (!indicator) return;
+            const active = document.querySelector('.nav-links .nav-link.active');
+            if (!active) return;
+            const navRect  = document.querySelector('.nav-links').getBoundingClientRect();
+            const linkRect = active.getBoundingClientRect();
+            indicator.style.left  = (linkRect.left - navRect.left) + 'px';
+            indicator.style.width = linkRect.width + 'px';
+        }
+        window.addEventListener('load', positionIndicator);
+        window.addEventListener('resize', positionIndicator);
+
+        document.querySelectorAll('.nav-links .nav-link[data-page-order]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (!href || href === '#') return;
+                const targetOrder = PAGE_ORDER[href] ?? currentOrder;
+                if (targetOrder === currentOrder) return;
+                e.preventDefault();
+                const goRight = targetOrder > currentOrder;
+                document.querySelectorAll('.nav-links .nav-link').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                positionIndicator();
+                document.body.classList.add('is-transitioning');
+                mainEl.classList.add(goRight ? 'page-slide-out-left' : 'page-slide-out-right');
+                setTimeout(() => { window.location.href = href; }, 300);
+            });
+        });
+
+        const inClass = (() => {
+            const ref = document.referrer;
+            if (!ref) return null;
+            try {
+                const refPath = new URL(ref).pathname.replace(/\/$/, '') || '/';
+                const refOrder = PAGE_ORDER[refPath] ?? -1;
+                if (refOrder < 0) return null;
+                return refOrder < currentOrder ? 'page-slide-in-left' : 'page-slide-in-right';
+            } catch { return null; }
+        })();
+
+        if (inClass) {
+            document.body.classList.add('is-transitioning');
+            mainEl.classList.add(inClass);
+            mainEl.addEventListener('animationend', () => {
+                mainEl.classList.remove(inClass);
+                document.body.classList.remove('is-transitioning');
+            }, { once: true });
+        }
+    })();
+    </script>
+</body>
+</html>

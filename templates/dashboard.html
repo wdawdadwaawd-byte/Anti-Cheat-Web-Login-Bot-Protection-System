@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WASDW Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0c;
+            --bg-elevated: #121215;
+            --bg-card: #16161a;
+            --bg-card-hover: #1c1c21;
+            --border: rgba(255,255,255,0.06);
+            --border-soft: rgba(255,255,255,0.09);
+            --text: #f4f4f6;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent: #fafafa;
+            --green: #4ade80;
+            --radius-xl: 28px;
+            --radius-lg: 22px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+            --radius-full: 9999px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+        }
+        .bg-glow {
+            position: fixed; inset: 0;
+            background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255,255,255,0.035), transparent 55%);
+            pointer-events: none; z-index: 0;
+        }
+        /* ── Navbar ── */
+        .navbar {
+            position: sticky; top: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1rem 1.75rem;
+            background: rgba(10,10,12,0.72);
+            backdrop-filter: blur(20px) saturate(140%);
+            -webkit-backdrop-filter: blur(20px) saturate(140%);
+            border-bottom: 1px solid var(--border);
+        }
+        .brand {
+            display: flex; align-items: center; gap: 0.6rem;
+            font-weight: 800; font-size: 1.2rem; letter-spacing: -0.03em;
+            color: var(--text); text-decoration: none;
+        }
+        .brand-icon {
+            width: 36px; height: 36px; background: var(--bg-card);
+            border: 1px solid var(--border-soft); border-radius: 12px;
+            display: flex; align-items: center; justify-content: center; font-size: 1.15rem;
+        }
+        .brand .dot { color: var(--text-secondary); font-weight: 600; }
+        .nav-links { display: flex; align-items: center; gap: 0.4rem; }
+        .nav-link {
+            color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 500;
+            padding: 0.55rem 1rem; border-radius: var(--radius-full); transition: all 0.2s ease;
+        }
+        .nav-link:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+            padding: 0.55rem 1.15rem; border-radius: var(--radius-full);
+            font-size: 0.875rem; font-weight: 600; text-decoration: none; border: none; cursor: pointer; transition: all 0.2s ease;
+        }
+        .btn-ghost { color: var(--text-secondary); background: transparent; border: 1px solid var(--border-soft); }
+        .btn-ghost:hover { color: var(--text); background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.12); }
+        .btn-solid { background: var(--accent); color: #0a0a0c; }
+        .btn-solid:hover { background: #fff; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(255,255,255,0.12); }
+
+        /* ── Page ── */
+        .page {
+            flex: 1; max-width: 1100px; width: 100%; margin: 0 auto;
+            padding: 2.5rem 1.75rem;
+            position: relative; z-index: 1;
+        }
+        /* ── Welcome card ── */
+        .welcome-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 2rem 2.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .welcome-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+        }
+        .welcome-tag {
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.72rem; font-weight: 700;
+            letter-spacing: 0.05em; text-transform: uppercase;
+            color: var(--text-muted);
+            background: rgba(255,255,255,0.05);
+            padding: 0.28rem 0.7rem; border-radius: var(--radius-full);
+            margin-bottom: 0.6rem;
+        }
+        .welcome-card h1 {
+            font-size: 1.5rem; font-weight: 800; letter-spacing: -0.03em;
+            line-height: 1.2; margin-bottom: 0.3rem;
+        }
+        .welcome-card h1 span { color: var(--accent); }
+        .welcome-card p { color: var(--text-muted); font-size: 0.85rem; }
+        .balance-box { text-align: right; flex-shrink: 0; }
+        .balance-label { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.25rem; }
+        .balance-amount {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem; font-weight: 700;
+            color: var(--green); letter-spacing: -0.04em;
+        }
+        /* ── Section header ── */
+        .section-title {
+            font-size: 1.05rem; font-weight: 700; letter-spacing: -0.02em;
+            color: var(--text); margin-bottom: 1.2rem;
+        }
+        /* ── Items grid ── */
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 1.2rem;
+        }
+        .item-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 1.4rem;
+            display: flex; flex-direction: column; justify-content: space-between; gap: 1rem;
+            transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+            position: relative; overflow: hidden;
+        }
+        .item-card::before {
+            content: '';
+            position: absolute; inset: 0; border-radius: inherit; padding: 1px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.07), transparent 50%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor; mask-composite: exclude;
+            pointer-events: none; opacity: 0; transition: opacity 0.25s ease;
+        }
+        .item-card:hover {
+            transform: translateY(-4px);
+            background: var(--bg-card-hover);
+            border-color: var(--border-soft);
+            box-shadow: 0 16px 36px -10px rgba(0,0,0,0.5);
+        }
+        .item-card:hover::before { opacity: 1; }
+        .item-tag {
+            display: inline-flex; font-size: 0.7rem; font-weight: 700;
+            letter-spacing: 0.04em; text-transform: uppercase;
+            color: var(--text-muted); background: rgba(255,255,255,0.05);
+            padding: 0.28rem 0.65rem; border-radius: var(--radius-full);
+            margin-bottom: 0.65rem;
+        }
+        .item-title { font-size: 0.98rem; font-weight: 650; line-height: 1.4; color: var(--text); letter-spacing: -0.01em; }
+        .item-footer {
+            display: flex; justify-content: space-between; align-items: center;
+            padding-top: 1rem; border-top: 1px solid var(--border);
+        }
+        .item-price {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.18rem; font-weight: 700;
+            color: var(--green); letter-spacing: -0.03em;
+        }
+        .btn-manage {
+            display: inline-flex; align-items: center; gap: 0.35rem;
+            padding: 0.48rem 1rem; border-radius: var(--radius-full);
+            font-size: 0.8rem; font-weight: 600;
+            background: rgba(255,255,255,0.06); color: var(--text-secondary);
+            border: 1px solid var(--border-soft); text-decoration: none; cursor: pointer;
+            transition: all 0.18s ease;
+        }
+        .btn-manage:hover { background: rgba(255,255,255,0.1); color: var(--text); border-color: rgba(255,255,255,0.14); }
+
+        @media (max-width: 700px) {
+            .navbar { padding: 0.85rem 1.1rem; flex-wrap: wrap; gap: 0.75rem; }
+            .nav-links { width: 100%; justify-content: flex-end; flex-wrap: wrap; gap: 0.35rem; }
+            .page { padding: 1.75rem 1.1rem; }
+            .welcome-card { flex-direction: column; align-items: flex-start; padding: 1.5rem; }
+            .balance-box { text-align: left; }
+            .items-grid { gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+
+    <nav class="navbar">
+        <a href="/" class="brand">
+            <div class="brand-icon">W</div>
+            <span>WASDW<span class="dot">.MARKET</span></span>
+        </a>
+        <div class="nav-links">
+            <a href="/" class="nav-link">Pazar Yeri</a>
+            <a href="/login" class="nav-link">Çıkış Yap</a>
+            <a href="/admin" class="btn btn-ghost">SOC</a>
+        </div>
+    </nav>
+
+    <div class="page">
+        <div class="welcome-card">
+            <div>
+                <span class="welcome-tag">Doğrulanmış Oturum</span>
+                <h1>Hoş Geldin, <span id="userNameDisplay">wasdw_trader</span></h1>
+                <p>Korumalı Cookie & Biyometrik Doğrulama ile giriş yapıldı.</p>
+            </div>
+            <div class="balance-box">
+                <div class="balance-label">Mevcut Bakiye</div>
+                <div class="balance-amount">$1,450.00</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Aktif İlanlarınız</h2>
+        <div class="items-grid">
+            <div class="item-card">
+                <div>
+                    <span class="item-tag">Valorant</span>
+                    <div class="item-title">Radiant Rank + Champions Vandal & Butterfly</div>
+                </div>
+                <div class="item-footer">
+                    <span class="item-price">$349.00</span>
+                    <button class="btn-manage">İlanı Yönet</button>
+                </div>
+            </div>
+            <div class="item-card">
+                <div>
+                    <span class="item-tag">CS2 Skins</span>
+                    <div class="item-title">★ Karambit | Doppler Phase 2 · 0.01 Float FN</div>
+                </div>
+                <div class="item-footer">
+                    <span class="item-price">$820.00</span>
+                    <button class="btn-manage">İlanı Yönet</button>
+                </div>
+            </div>
+            <div class="item-card">
+                <div>
+                    <span class="item-tag">Steam</span>
+                    <div class="item-title">100 USD Steam Global Dijital Hediye Kartı</div>
+                </div>
+                <div class="item-footer">
+                    <span class="item-price">$88.50</span>
+                    <button class="btn-manage">İlanı Yönet</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const userJson = sessionStorage.getItem('auth_user');
+        if (userJson) {
+            try {
+                const u = JSON.parse(userJson);
+                if (u.username) document.getElementById('userNameDisplay').textContent = u.username;
+            } catch(e) {}
+        }
+    </script>
+    {% for f in all_dist %}<script src="/static/js/dist/{{ f }}?v={{ loader_v }}"></script>{% endfor %}
+    {% if not all_dist %}{% if shield_js %}<script src="/static/js/dist/{{ shield_js }}?v={{ loader_v }}"></script>{% endif %}<script src="/static/js/dist/{{ loader_js }}?v={{ loader_v }}"{% if loader_integrity %} integrity="{{ loader_integrity }}" crossorigin="anonymous"{% endif %}></script>{% endif %}
+    <script src="/static/js/behavioral-collector.js"></script>
+    <script src="/static/js/evidence-collector.js"></script>
+</body>
+</html>

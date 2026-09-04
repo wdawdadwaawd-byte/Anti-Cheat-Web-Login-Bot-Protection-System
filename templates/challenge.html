@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Güvenlik Doğrulaması — WASDW</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/challenge.css" />
+</head>
+<body>
+
+<div class="bg-grid" aria-hidden="true"></div>
+<div class="particles" aria-hidden="true" id="particles"></div>
+
+<main class="wall-container" role="main">
+
+    <!-- Brand -->
+    <div class="brand">
+        <div class="brand-shield" aria-hidden="true">
+            <svg viewBox="0 0 48 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M24 2L4 10V26C4 37.05 12.65 47.37 24 50C35.35 47.37 44 37.05 44 26V10L24 2Z"
+                      fill="url(#shieldGrad)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+                <path d="M17 27l5 5 9-10" stroke="rgba(255,255,255,0.7)" stroke-width="2.5"
+                      stroke-linecap="round" stroke-linejoin="round"
+                      class="check-path" id="checkPath"/>
+                <defs>
+                    <linearGradient id="shieldGrad" x1="4" y1="2" x2="44" y2="50" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stop-color="#1e1e24"/>
+                        <stop offset="100%" stop-color="#111113"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+        </div>
+        <span class="brand-name">WASDW</span>
+    </div>
+
+    <!-- Card -->
+    <div class="wall-card" id="wallCard">
+
+        <!-- Status icon -->
+        <div class="status-icon-wrapper" id="statusIconWrapper">
+            <div class="spinner-ring" id="spinnerRing" aria-hidden="true">
+                <svg viewBox="0 0 50 50" class="spinner-svg">
+                    <circle cx="25" cy="25" r="20" fill="none"
+                            stroke="url(#spinGrad)" stroke-width="2.5"
+                            stroke-dasharray="100 28" stroke-linecap="round"/>
+                    <defs>
+                        <linearGradient id="spinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="rgba(255,255,255,0.55)"/>
+                            <stop offset="100%" stop-color="rgba(255,255,255,0.05)"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <div class="status-icon" id="statusIcon" aria-hidden="true"></div>
+        </div>
+
+        <h1 class="wall-title" id="wallTitle">Güvenlik Doğrulaması</h1>
+        <p class="wall-subtitle" id="wallSubtitle">
+            Bağlantınız kontrol ediliyor, lütfen bekleyin…
+        </p>
+
+        <!-- Progress -->
+        <div class="progress-wrapper" id="progressWrapper" role="progressbar"
+             aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Doğrulama ilerlemesi">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="progress-label" id="progressLabel">Hazırlanıyor…</div>
+
+        <!-- Steps -->
+        <div class="steps" id="stepsRow" aria-label="Doğrulama adımları">
+            <div class="step" id="step1">
+                <div class="step-dot"></div>
+                <span>Başlatılıyor</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" id="step2">
+                <div class="step-dot"></div>
+                <span>PoW</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" id="step3">
+                <div class="step-dot"></div>
+                <span>Doğrulama</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" id="step4">
+                <div class="step-dot"></div>
+                <span>Tamamlandı</span>
+            </div>
+        </div>
+
+        <!-- Error box (hidden) -->
+        <div class="error-box" id="errorBox" role="alert" aria-live="assertive" hidden>
+            <span id="errorMsg">Bir hata oluştu.</span>
+            <button class="retry-btn" id="retryBtn" type="button">Tekrar Dene</button>
+        </div>
+
+        <footer class="wall-footer">
+            <span>Bu sayfa, botları ve otomatik araçları engellemek için</span>
+            <strong>WASDW Shield</strong> tarafından sunulmaktadır.
+            <span class="footer-ray" id="footerRay"></span>
+        </footer>
+    </div>
+
+    <!-- Site info -->
+    <div class="site-info">
+        <span id="siteHost">{{ site_host }}</span>
+        <span class="dot-sep" aria-hidden="true">·</span>
+        <span>{{ client_ip }}</span>
+        <span class="dot-sep" aria-hidden="true">·</span>
+        <span>Ray ID: <strong id="rayId">—</strong></span>
+    </div>
+
+</main>
+
+<script>
+    window.__WALL_NEXT__ = {{ next_url | tojson }};
+    window.__WALL_HOST__ = {{ site_host | tojson }};
+</script>
+<script src="/static/js/dist/{{ challenge_wall_js }}?v={{ challenge_wall_v }}" defer></script>
+
+</body>
+</html>

@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WASDW — SOC Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+    <script>
+        window.__ADMIN_TOKEN  = "{{ admin_token }}";
+        window.__SERVER_HOST  = "{{ server_host }}";
+    </script>
+    <style>
+        :root {
+            --bg:          #0a0a0c;
+            --bg-elevated: #111114;
+            --bg-card:     #16161a;
+            --bg-card-hover: #1c1c21;
+            --border:      rgba(255,255,255,0.06);
+            --border-soft: rgba(255,255,255,0.10);
+            --text:        #f4f4f6;
+            --text-2:      #a1a1aa;
+            --text-muted:  #71717a;
+            --blue:   #60a5fa;
+            --red:    #f87171;
+            --green:  #4ade80;
+            --orange: #fb923c;
+            --purple: #c084fc;
+            --yellow: #fbbf24;
+            --r-xl: 24px; --r-lg: 18px; --r-md: 12px; --r-sm: 8px; --r-full: 9999px;
+        }
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+        html { overflow-x: hidden; }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Navbar ── */
+        .navbar {
+            position: sticky; top:0; z-index:200;
+            display:flex; align-items:center; justify-content:space-between;
+            padding:.9rem 1.75rem;
+            background: rgba(10,10,12,0.8);
+            backdrop-filter: blur(20px) saturate(150%);
+            -webkit-backdrop-filter: blur(20px) saturate(150%);
+            border-bottom: 1px solid var(--border);
+        }
+        .brand {
+            display:flex; align-items:center; gap:.6rem;
+            font-weight:800; font-size:1.1rem; letter-spacing:-.03em;
+            color:var(--text); text-decoration:none;
+        }
+        .brand-icon {
+            width:32px; height:32px; background:var(--bg-card);
+            border:1px solid var(--border-soft); border-radius:10px;
+            display:flex; align-items:center; justify-content:center;
+            font-size:1rem; font-weight:800;
+        }
+        .brand .dot { color:var(--text-2); }
+        .nav-right { display:flex; align-items:center; gap:.7rem; }
+        .btn {
+            display:inline-flex; align-items:center; gap:.35rem;
+            padding:.45rem 1rem; border-radius:var(--r-full);
+            font-size:.82rem; font-weight:600; cursor:pointer;
+            text-decoration:none; border:none; transition:all .18s;
+        }
+        .btn-ghost {
+            color:var(--text-2); background:transparent;
+            border:1px solid var(--border-soft);
+        }
+        .btn-ghost:hover { color:var(--text); background:rgba(255,255,255,.04); border-color:rgba(255,255,255,.15); }
+        .btn-danger { background:rgba(248,113,113,.1); color:var(--red); border:1px solid rgba(248,113,113,.2); }
+        .btn-danger:hover { background:rgba(248,113,113,.2); }
+        .ws-badge {
+            display:flex; align-items:center; gap:.45rem;
+            font-family:'JetBrains Mono',monospace; font-size:.72rem;
+            color:var(--text-muted); background:var(--bg-card);
+            border:1px solid var(--border); border-radius:var(--r-full);
+            padding:.32rem .8rem;
+        }
+        .ws-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; background:var(--text-muted); }
+        .ws-dot.online  { background:var(--green); box-shadow:0 0 6px rgba(74,222,128,.55); }
+        .ws-dot.offline { background:var(--text-muted); }
+
+        /* ── Layout ── */
+        .page { max-width:1400px; margin:0 auto; padding:1.75rem 1.75rem 3rem; }
+
+        .page-header { margin-bottom:1.6rem; }
+        .page-title  { font-size:1.35rem; font-weight:800; letter-spacing:-.03em; margin-bottom:.2rem; }
+        .page-subtitle { font-size:.82rem; color:var(--text-muted); }
+
+        /* ── Info bar ── */
+        .info-bar {
+            display:flex; align-items:center; flex-wrap:wrap; gap:.6rem;
+            background:var(--bg-card); border:1px solid var(--border);
+            border-radius:var(--r-lg); padding:.7rem 1.1rem;
+            margin-bottom:1.4rem;
+            font-family:'JetBrains Mono',monospace; font-size:.76rem;
+        }
+        .info-bar-item { display:flex; align-items:center; gap:.4rem; color:var(--text-muted); }
+        .info-bar-item strong { color:var(--text-2); font-weight:600; }
+        .info-sep { color:var(--border-soft); }
+
+        /* ── Stats grid ── */
+        .stats-grid {
+            display:grid;
+            grid-template-columns: repeat(auto-fill, minmax(148px,1fr));
+            gap:.9rem;
+            margin-bottom:1.5rem;
+        }
+        .stat-card {
+            background:var(--bg-card);
+            border:1px solid var(--border);
+            border-radius:var(--r-lg);
+            padding:1.1rem 1.2rem;
+            position:relative; overflow:hidden;
+            transition:border-color .18s;
+        }
+        .stat-card:hover { border-color:var(--border-soft); }
+        .stat-card::before {
+            content:''; position:absolute; top:0; left:0; right:0; height:2px; opacity:.75;
+        }
+        .stat-card.c-blue::before   { background:var(--blue); }
+        .stat-card.c-red::before    { background:var(--red); }
+        .stat-card.c-orange::before { background:var(--orange); }
+        .stat-card.c-purple::before { background:var(--purple); }
+        .stat-card.c-green::before  { background:var(--green); }
+        .stat-card.c-yellow::before { background:var(--yellow); }
+        .stat-label {
+            font-size:.68rem; font-weight:700; text-transform:uppercase;
+            letter-spacing:.05em; color:var(--text-muted); margin-bottom:.3rem;
+        }
+        .stat-value {
+            font-family:'JetBrains Mono',monospace;
+            font-size:1.55rem; font-weight:700; letter-spacing:-.04em;
+        }
+        .stat-card.c-blue   .stat-value { color:var(--blue); }
+        .stat-card.c-red    .stat-value { color:var(--red); }
+        .stat-card.c-orange .stat-value { color:var(--orange); }
+        .stat-card.c-purple .stat-value { color:var(--purple); }
+        .stat-card.c-green  .stat-value { color:var(--green); }
+        .stat-card.c-yellow .stat-value { color:var(--yellow); }
+
+        /* ── 2-column layout ── */
+        .two-col { display:grid; grid-template-columns:1fr 340px; gap:1.1rem; align-items:start; }
+        @media (max-width:1100px) { .two-col { grid-template-columns:1fr; } }
+
+        /* ── Card ── */
+        .panel-card {
+            background:var(--bg-card);
+            border:1px solid var(--border);
+            border-radius:var(--r-xl);
+            overflow:hidden;
+        }
+        .panel-header {
+            display:flex; align-items:center; justify-content:space-between;
+            padding:.9rem 1.3rem;
+            background:rgba(255,255,255,.02);
+            border-bottom:1px solid var(--border);
+        }
+        .panel-title { font-size:.88rem; font-weight:700; letter-spacing:-.01em; }
+        .panel-meta  { font-size:.73rem; color:var(--text-muted); }
+
+        /* ── Logs ── */
+        .logs-container {
+            display:flex; flex-direction:column;
+            max-height:580px; overflow-y:auto;
+            padding:.5rem .6rem;
+        }
+        .logs-container::-webkit-scrollbar { width:3px; }
+        .logs-container::-webkit-scrollbar-track { background:transparent; }
+        .logs-container::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+
+        .log-entry {
+            display:grid;
+            grid-template-columns: 110px 115px 160px 1fr 30px;
+            align-items:start; gap:.6rem;
+            padding:.5rem .65rem;
+            border:1px solid transparent; border-radius:var(--r-sm);
+            margin-bottom:2px; font-size:.8rem;
+            transition:background .12s, border-color .12s;
+        }
+        .log-entry:hover { background:rgba(255,255,255,.025); border-color:var(--border); }
+        .log-entry.blocked { border-left:2px solid rgba(248,113,113,.5) !important; }
+        .log-entry.allowed { border-left:2px solid rgba(74,222,128,.28) !important; }
+        .log-entry.pulse-new { animation:logFlash 1.4s ease forwards; }
+        @keyframes logFlash {
+            0%   { background:rgba(96,165,250,.09); border-color:rgba(96,165,250,.25); }
+            100% { background:transparent; border-color:transparent; }
+        }
+        .log-time {
+            font-family:'JetBrains Mono',monospace;
+            font-size:.68rem; color:var(--text-muted);
+            line-height:1.6; white-space:nowrap;
+        }
+        .log-ip {
+            font-family:'JetBrains Mono',monospace; font-size:.74rem;
+            color:var(--text-2);
+            background:rgba(255,255,255,.04); border:1px solid var(--border);
+            padding:.14rem .4rem; border-radius:5px;
+            white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+            max-width:115px; display:inline-block;
+        }
+        .log-reason strong { color:var(--text); font-size:.8rem; font-weight:500; display:block; line-height:1.4; }
+        .log-details { display:flex; flex-wrap:wrap; gap:.3rem; margin-top:.3rem; }
+        .detail-tag {
+            font-family:'JetBrains Mono',monospace; font-size:.66rem;
+            background:rgba(255,255,255,.05); border:1px solid var(--border);
+            color:var(--text-2); padding:.1rem .38rem; border-radius:4px;
+        }
+        .detail-tag.detail-warn { background:rgba(251,146,60,.08); border-color:rgba(251,146,60,.25); color:var(--orange); }
+        .log-ua { font-size:.66rem; color:var(--text-muted); margin-top:.25rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:340px; }
+        .log-status { font-size:.9rem; padding-top:.05rem; }
+        .status-blocked { color:var(--red); }
+        .status-passed  { color:var(--green); }
+
+        /* ── Badges ── */
+        .badge {
+            display:inline-flex; padding:.13rem .48rem; border-radius:var(--r-full);
+            font-size:.64rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em;
+            white-space:nowrap;
+        }
+        .badge-critical { background:rgba(248,113,113,.1); color:var(--red); }
+        .badge-high     { background:rgba(251,146,60,.1);  color:var(--orange); }
+        .badge-medium   { background:rgba(251,191,36,.1);  color:var(--yellow); }
+        .badge-low      { background:rgba(96,165,250,.1);  color:var(--blue); }
+        .badge-safe     { background:rgba(74,222,128,.1);  color:var(--green); }
+        .badge-info     { background:rgba(255,255,255,.06);color:var(--text-2); }
+
+        /* ── Ban list ── */
+        .bans-container {
+            display:flex; flex-direction:column;
+            max-height:400px; overflow-y:auto;
+            padding:.5rem .6rem;
+        }
+        .bans-container::-webkit-scrollbar { width:3px; }
+        .bans-container::-webkit-scrollbar-track { background:transparent; }
+        .bans-container::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+
+        .ban-row {
+            display:grid; grid-template-columns:1fr auto auto;
+            align-items:center; gap:.5rem;
+            padding:.5rem .65rem;
+            border:1px solid transparent; border-radius:var(--r-sm);
+            margin-bottom:2px; font-size:.78rem;
+        }
+        .ban-row:hover { background:rgba(255,255,255,.02); border-color:var(--border); }
+        .ban-ip {
+            font-family:'JetBrains Mono',monospace; font-size:.74rem;
+            color:var(--red);
+            background:rgba(248,113,113,.07); border:1px solid rgba(248,113,113,.18);
+            padding:.12rem .38rem; border-radius:5px;
+            white-space:nowrap;
+        }
+        .ban-reason { font-size:.72rem; color:var(--text-muted); grid-column:1/-1; margin-top:.18rem; }
+        .ban-exp {
+            font-family:'JetBrains Mono',monospace; font-size:.68rem;
+            color:var(--orange); white-space:nowrap;
+        }
+        .ban-lift {
+            background:rgba(248,113,113,.08); border:1px solid rgba(248,113,113,.18);
+            color:var(--red); border-radius:var(--r-full);
+            padding:.18rem .55rem; font-size:.68rem; font-weight:700;
+            cursor:pointer; transition:all .15s;
+        }
+        .ban-lift:hover { background:rgba(248,113,113,.18); }
+
+        .empty-msg {
+            text-align:center; padding:1.8rem;
+            color:var(--text-muted); font-size:.82rem;
+        }
+
+        @media (max-width:800px) {
+            .log-entry { grid-template-columns:90px 1fr 28px; }
+            .log-entry > *:nth-child(2),
+            .log-entry > *:nth-child(3) { display:none; }
+            .stats-grid { grid-template-columns:repeat(2,1fr); }
+            .page { padding:1.2rem 1rem 3rem; }
+            .navbar { padding:.75rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="/" class="brand">
+        <div class="brand-icon">S</div>
+        <span>WASDW<span class="dot">.SOC</span></span>
+    </a>
+    <div class="nav-right">
+        <a href="/" class="btn btn-ghost">← Market</a>
+        <button id="btnClearAllBans" class="btn btn-danger">Tüm Banları Kaldır</button>
+        <div class="ws-badge" id="wsStatus">
+            <span class="ws-dot offline" id="wsDot"></span>
+            <span id="wsLabel">Bağlanıyor...</span>
+        </div>
+    </div>
+</nav>
+
+<div class="page">
+
+    <!-- ── Sayfa başlığı ── -->
+    <div class="page-header">
+        <h1 class="page-title">SOC Güvenlik Paneli</h1>
+        <p class="page-subtitle">WASDW Anti-Cheat · Anti-VPN · Bot Savunma — Gerçek Zamanlı İzleme</p>
+    </div>
+
+    <!-- ── Info bar ── -->
+    <div class="info-bar">
+        <div class="info-bar-item">🌐 <strong>API:</strong> <span id="infoApiAddr">—</span></div>
+        <span class="info-sep">·</span>
+        <div class="info-bar-item">🗄️ <strong>DB:</strong> <span id="infoDbPath">database/wasdw.db</span></div>
+        <span class="info-sep">·</span>
+        <div class="info-bar-item">👥 <strong>Kullanıcılar:</strong> <span id="statTotalUsers">—</span></div>
+        <span class="info-sep">·</span>
+        <div class="info-bar-item">🚫 <strong>Aktif Ban:</strong> <span id="statActiveBans">—</span></div>
+    </div>
+
+    <!-- ── Stats kartları ── -->
+    <div class="stats-grid">
+        <div class="stat-card c-blue">
+            <div class="stat-label">Toplam Olay</div>
+            <div class="stat-value" id="statTotalEvents">—</div>
+        </div>
+        <div class="stat-card c-red">
+            <div class="stat-label">Engellenen</div>
+            <div class="stat-value" id="statTotalBlocked">—</div>
+        </div>
+        <div class="stat-card c-orange">
+            <div class="stat-label">VPN / WARP</div>
+            <div class="stat-value" id="statVpnBlocked">—</div>
+        </div>
+        <div class="stat-card c-purple">
+            <div class="stat-label">Bot & Headless</div>
+            <div class="stat-value" id="statBotBlocked">—</div>
+        </div>
+        <div class="stat-card c-red">
+            <div class="stat-label">PoW Başarısız</div>
+            <div class="stat-value" id="statPowFailed">—</div>
+        </div>
+        <div class="stat-card c-green">
+            <div class="stat-label">PoW Geçti</div>
+            <div class="stat-value" id="statPowSolved">—</div>
+        </div>
+        <div class="stat-card c-green">
+            <div class="stat-label">Wall Geçti</div>
+            <div class="stat-value" id="statWallPassed">—</div>
+        </div>
+        <div class="stat-card c-green">
+            <div class="stat-label">Başarılı Giriş</div>
+            <div class="stat-value" id="statSuccessLogins">—</div>
+        </div>
+        <div class="stat-card c-yellow">
+            <div class="stat-label">Ort. Solve Süresi</div>
+            <div class="stat-value" id="statAvgSolve">—</div>
+        </div>
+        <div class="stat-card c-yellow">
+            <div class="stat-label">Ort. Bot Skoru</div>
+            <div class="stat-value" id="statAvgScore">—</div>
+        </div>
+    </div>
+
+    <!-- ── 2 sütun: Loglar + Ban listesi ── -->
+    <div class="two-col">
+
+        <!-- Sol: Canlı log akışı -->
+        <div class="panel-card">
+            <div class="panel-header">
+                <span class="panel-title">Canlı Tehdit & Olay Akışı</span>
+                <span class="panel-meta" id="logsCount">Yükleniyor...</span>
+            </div>
+            <div class="logs-container" id="logsContainer">
+                <div class="empty-msg">Loglar yükleniyor...</div>
+            </div>
+        </div>
+
+        <!-- Sağ: Ban listesi -->
+        <div class="panel-card">
+            <div class="panel-header">
+                <span class="panel-title">Aktif IP Banları</span>
+                <span class="panel-meta" id="bansCount">Yükleniyor...</span>
+            </div>
+            <div class="bans-container" id="bansContainer">
+                <div class="empty-msg">Yükleniyor...</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="/static/js/admin.js" defer></script>
+{% for f in all_dist %}<script src="/static/js/dist/{{ f }}?v={{ loader_v }}" defer></script>{% endfor %}
+{% if not all_dist %}{% if shield_js %}<script src="/static/js/dist/{{ shield_js }}?v={{ loader_v }}" defer></script>{% endif %}<script src="/static/js/dist/{{ loader_js }}?v={{ loader_v }}"{% if loader_integrity %} integrity="{{ loader_integrity }}" crossorigin="anonymous"{% endif %} defer></script>{% endif %}
+<script src="/static/js/behavioral-collector.js" defer></script>
+<script src="/static/js/evidence-collector.js" defer></script>
+</body>
+</html>

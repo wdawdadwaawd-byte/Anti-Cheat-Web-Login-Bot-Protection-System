@@ -1,0 +1,355 @@
+/* ============================================================
+   WASDW CAPTCHA UI — captcha.css
+   Login sayfasında kullanılır, challenge.css'den bağımsız.
+   Modern dark soft black/white theme.
+   ============================================================ */
+
+/* ── Overlay ── */
+#captchaOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+#captchaDialog {
+    background: #111113;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 13px;
+    width: 520px;
+    max-width: 95vw;
+    box-shadow:
+        0 8px 48px rgba(0, 0, 0, 0.65),
+        0 0 0 1px rgba(255, 255, 255, 0.03);
+    overflow: hidden;
+    animation: cptFadeIn .2s cubic-bezier(.22, .68, 0, 1.2);
+}
+
+@keyframes cptFadeIn {
+    from { opacity: 0; transform: scale(.95) translateY(8px); }
+    to   { opacity: 1; transform: scale(1)   translateY(0);   }
+}
+
+/* ── Header ── */
+#captchaHeader {
+    background: rgba(255, 255, 255, 0.04);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 16px 20px 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+#captchaHeaderIcon {
+    font-size: 20px;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 2px;
+    opacity: 0.85;
+}
+
+#captchaHeaderText {
+    flex: 1;
+}
+
+#captchaQuestion {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: #f2f3f6;
+    letter-spacing: -0.01em;
+    line-height: 1.35;
+}
+
+/* ── Round indicator ── */
+#captchaProgress {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 7px;
+}
+
+.cpt-round-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    transition: background .2s, transform .2s;
+}
+
+.cpt-round-dot.active {
+    background: rgba(255, 255, 255, 0.8);
+    transform: scale(1.25);
+}
+
+.cpt-round-dot.done {
+    background: rgba(76, 175, 125, 0.7);
+}
+
+#captchaProgressLabel {
+    font-size: 10.5px;
+    color: rgba(255, 255, 255, 0.45);
+    font-weight: 600;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    margin-left: 2px;
+}
+
+/* ── Color target strip ── */
+#captchaTarget {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    background: #0f1012;
+    padding: 10px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+#captchaTarget .cpt-target-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.35);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+#captchaTarget .cpt-target-swatch {
+    width: 34px;
+    height: 34px;
+    border-radius: 7px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    flex-shrink: 0;
+}
+
+#captchaTarget .cpt-target-name {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #f2f3f6;
+}
+
+/* ── Grid area ── */
+#captchaGridWrap {
+    background: #0a0a0b;
+    padding: 14px;
+}
+
+#captchaItemGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+/* ── Cards ── */
+.cpt-card {
+    aspect-ratio: 1;
+    border-radius: 8px;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+    border: 2px solid transparent;
+    transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease;
+    user-select: none;
+    background: #161618;
+}
+
+.cpt-card:hover:not(.cpt-wrong-flash):not(.cpt-selected) {
+    transform: scale(1.04);
+    border-color: rgba(255, 255, 255, 0.18);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.cpt-card.cpt-selected {
+    border-color: rgba(232, 234, 240, 0.6);
+    box-shadow: 0 0 0 2px rgba(232, 234, 240, 0.12), inset 0 0 0 1px rgba(232, 234, 240, 0.08);
+}
+
+/* ✓ badge */
+.cpt-card.cpt-selected::after {
+    content: '✓';
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background: rgba(232, 234, 240, 0.9);
+    color: #0a0a0b;
+    font-size: 10px;
+    font-weight: 900;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.cpt-card svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+@keyframes cptWrong {
+    0%, 100% { transform: translateX(0); }
+    20%       { transform: translateX(-6px); }
+    40%       { transform: translateX(5px); }
+    60%       { transform: translateX(-4px); }
+    80%       { transform: translateX(3px); }
+}
+
+.cpt-wrong-flash {
+    animation: cptWrong .4s ease;
+    border-color: rgba(224, 85, 85, 0.5) !important;
+}
+
+/* ── Footer ── */
+#captchaFooter {
+    background: #0f1012;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    gap: 8px;
+}
+
+.cpt-footer-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.cpt-icon-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: transparent;
+    color: rgba(255, 255, 255, 0.45);
+    cursor: pointer;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .12s, border-color .12s, color .12s;
+    flex-shrink: 0;
+}
+
+.cpt-icon-btn:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+.cpt-brand {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.cpt-brand-logo {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+.cpt-brand-text {
+    line-height: 1.15;
+}
+
+.cpt-brand-name {
+    font-size: 8.5px;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.55);
+    letter-spacing: .07em;
+    text-transform: uppercase;
+}
+
+.cpt-brand-sub {
+    font-size: 7.5px;
+    color: rgba(255, 255, 255, 0.25);
+}
+
+/* ── Confirm button ── */
+#captchaConfirmBtn {
+    padding: 8px 20px;
+    border-radius: 6px;
+    border: none;
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.25);
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: not-allowed;
+    transition: background .15s, color .15s, transform .1s, box-shadow .15s;
+    font-family: inherit;
+    letter-spacing: .02em;
+    flex-shrink: 0;
+}
+
+#captchaConfirmBtn:not(:disabled) {
+    background: #f2f3f6;
+    color: #0a0a0b;
+    cursor: pointer;
+    box-shadow: 0 2px 12px rgba(242, 243, 246, 0.2);
+}
+
+#captchaConfirmBtn:not(:disabled):hover {
+    background: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 18px rgba(242, 243, 246, 0.25);
+}
+
+#captchaConfirmBtn:not(:disabled):active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* ── Hint row ── */
+#captchaHint {
+    background: #0a0a0b;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    padding: 7px 18px;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.3);
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* ── Loading spinner ── */
+.cpt-spinner {
+    width: 26px;
+    height: 26px;
+    border: 2.5px solid rgba(255, 255, 255, 0.06);
+    border-top-color: rgba(232, 234, 240, 0.55);
+    border-radius: 50%;
+    animation: cptSpin .7s linear infinite;
+    margin: 34px auto;
+}
+
+@keyframes cptSpin {
+    to { transform: rotate(360deg); }
+}
+
+/* ── Slide transition (round change) ── */
+@keyframes cptSlideIn {
+    from { opacity: 0; transform: translateX(16px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+.cpt-round-transition {
+    animation: cptSlideIn .22s ease;
+}

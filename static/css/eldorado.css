@@ -1,0 +1,691 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* ============================================================
+   WASDW Marketplace — Modern Dark Theme
+   Soft black & white palette, minimal & clean
+   ============================================================ */
+
+:root {
+    --bg-dark:         #0a0a0b;
+    --bg-card:         #111113;
+    --bg-input:        #18181c;
+    --bg-surface:      #161618;
+    --border-color:    #28282e;
+    --border-subtle:   #1e1e22;
+
+    /* Primary accent — cool white-blue */
+    --accent-primary:  #e8eaf0;
+    --accent-hover:    #ffffff;
+    --accent-muted:    rgba(232, 234, 240, 0.65);
+
+    /* Semantic colors */
+    --accent-red:      #e05555;
+    --accent-green:    #4caf7d;
+    --accent-blue:     #5b8dee;
+    --accent-cyan:     #4db8c8;
+    --accent-orange:   #c97c3a;
+
+    /* Text */
+    --text-main:       #f2f3f6;
+    --text-muted:      #6e7180;
+    --text-dim:        #3e414e;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+/* ── Subtle background noise ── */
+.bg-glow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(ellipse at 15% 10%, rgba(91, 141, 238, 0.04) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 90%, rgba(77, 184, 200, 0.03) 0%, transparent 50%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* ── Navbar ── */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 3.5rem;
+    background: rgba(10, 10, 11, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -0.4px;
+    color: var(--text-main);
+    text-decoration: none;
+}
+
+.brand .logo-icon {
+    font-size: 1.3rem;
+    opacity: 0.9;
+}
+
+/* .MARKET rengi — soft beyaz vurgu */
+.brand span.gold {
+    color: var(--accent-primary);
+    opacity: 0.75;
+    font-weight: 600;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+}
+
+.nav-link {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.18s;
+    letter-spacing: 0.01em;
+}
+
+.nav-link:hover {
+    color: var(--text-main);
+}
+
+.nav-link.active {
+    color: var(--text-main);
+}
+
+.btn-admin-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.9rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    border-radius: 7px;
+    font-size: 0.82rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.18s;
+    letter-spacing: 0.01em;
+}
+
+.btn-admin-link:hover {
+    background: rgba(255, 255, 255, 0.09);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ── Main Container ── */
+.main-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2.5rem 1.5rem;
+}
+
+/* ── Login / Register Card ── */
+.login-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    width: 100%;
+    max-width: 420px;
+    padding: 2.2rem 2rem;
+    box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.03),
+        0 24px 64px rgba(0, 0, 0, 0.55);
+    position: relative;
+}
+
+.card-header {
+    text-align: center;
+    margin-bottom: 1.8rem;
+}
+
+.card-header h1 {
+    font-size: 1.55rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    letter-spacing: -0.02em;
+    color: var(--text-main);
+}
+
+.card-header p {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+}
+
+/* ── Shield Status Pill ── */
+.shield-status-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 99px;
+    padding: 0.38rem 1rem;
+    margin-bottom: 1.6rem;
+    font-size: 0.78rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-muted);
+}
+
+.shield-badge {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.shield-badge.checking {
+    background: #b0b4c8;
+    box-shadow: 0 0 6px rgba(176, 180, 200, 0.5);
+    animation: blink 1s infinite alternate;
+}
+
+.shield-badge.secure {
+    background: var(--accent-green);
+    box-shadow: 0 0 6px rgba(76, 175, 125, 0.6);
+}
+
+.shield-badge.blocked {
+    background: var(--accent-red);
+    box-shadow: 0 0 6px rgba(224, 85, 85, 0.6);
+}
+
+@keyframes blink {
+    from { opacity: 0.25; }
+    to   { opacity: 1; }
+}
+
+/* ── Form ── */
+.form-group {
+    margin-bottom: 1.1rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    margin-bottom: 0.38rem;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrapper input {
+    width: 100%;
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: 9px;
+    padding: 0.82rem 1rem;
+    color: var(--text-main);
+    font-size: 0.93rem;
+    transition: border-color 0.18s, box-shadow 0.18s;
+    outline: none;
+}
+
+.input-wrapper input::placeholder {
+    color: var(--text-dim);
+}
+
+.input-wrapper input:focus {
+    border-color: rgba(232, 234, 240, 0.35);
+    box-shadow: 0 0 0 3px rgba(232, 234, 240, 0.07);
+}
+
+/* ── Honeypot ── */
+.hp-trap-hidden {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    z-index: -100;
+    width: 0;
+    height: 0;
+    left: -9999px;
+}
+
+/* ── Submit Button ── */
+.btn-submit {
+    width: 100%;
+    background: var(--text-main);
+    color: #0a0a0b;
+    border: none;
+    border-radius: 9px;
+    padding: 0.88rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.18s;
+    margin-top: 1.4rem;
+    letter-spacing: 0.01em;
+}
+
+.btn-submit:hover {
+    background: var(--accent-hover);
+    box-shadow: 0 4px 24px rgba(232, 234, 240, 0.15);
+    transform: translateY(-1px);
+}
+
+.btn-submit:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.btn-submit:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* ── Alert Boxes ── */
+.alert-box {
+    display: none;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.84rem;
+    margin-bottom: 1.1rem;
+    line-height: 1.45;
+}
+
+.alert-box.show {
+    display: block;
+}
+
+.alert-box.error {
+    background: rgba(224, 85, 85, 0.08);
+    border: 1px solid rgba(224, 85, 85, 0.3);
+    color: #e87878;
+}
+
+.alert-box.success {
+    background: rgba(76, 175, 125, 0.08);
+    border: 1px solid rgba(76, 175, 125, 0.3);
+    color: #6dbf95;
+}
+
+/* ── Demo Credentials Box ── */
+.demo-creds-box {
+    margin-top: 1.6rem;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 0.75rem 0.9rem;
+    font-size: 0.74rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+.demo-creds-box code {
+    color: var(--text-main);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+}
+
+/* ── Spinner ── */
+.spinner {
+    width: 15px;
+    height: 15px;
+    border: 2px solid rgba(10, 10, 11, 0.25);
+    border-top: 2px solid #0a0a0b;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   CAPTCHA OVERLAY  —  Entegre Login CAPTCHA UI
+   ══════════════════════════════════════════════════════════════ */
+
+#captchaOverlay {
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+@keyframes captchaFadeIn {
+    from { opacity: 0; transform: scale(0.95) translateY(8px); }
+    to   { opacity: 1; transform: scale(1)   translateY(0); }
+}
+
+.captcha-box {
+    background: #111113;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 14px;
+    width: 440px;
+    max-width: 96vw;
+    box-shadow: 0 32px 80px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.03);
+    overflow: hidden;
+    animation: captchaFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.captcha-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px 13px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.captcha-brand { display: flex; align-items: center; gap: 10px; }
+
+.captcha-brand-icon {
+    width: 30px;
+    height: 30px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.captcha-brand-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.85);
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+}
+
+.captcha-brand-sub {
+    font-size: 11px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.28);
+    line-height: 1.2;
+}
+
+.captcha-refresh-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 7px;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    background: transparent;
+    color: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    transition: background 0.14s, color 0.14s;
+}
+.captcha-refresh-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.captcha-body { padding: 18px 18px 0; }
+
+.captcha-instruction {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.55);
+    margin-bottom: 13px;
+    line-height: 1.5;
+}
+.captcha-instruction strong {
+    color: #fff;
+    font-weight: 700;
+}
+
+.captcha-workspace {
+    display: flex;
+    gap: 12px;
+    align-items: stretch;
+    margin-bottom: 14px;
+}
+
+.captcha-image-wrap {
+    flex: 1;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #0a0a0b;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    min-height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    position: relative;
+    user-select: none;
+    transition: border-color 0.15s;
+}
+.captcha-image-wrap:active { cursor: grabbing; }
+.captcha-image-wrap.dragging { border-color: rgba(232, 234, 240, 0.3); }
+
+.captcha-image-wrap svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    pointer-events: none;
+    border-radius: 9px;
+}
+
+.captcha-target {
+    width: 92px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    border: 2px dashed rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.015);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    transition: border-color 0.16s, background 0.16s, box-shadow 0.16s, transform 0.12s;
+    position: relative;
+    min-height: 110px;
+}
+
+.captcha-target-icon {
+    font-size: 20px;
+    opacity: 0.2;
+    transition: opacity 0.15s, transform 0.15s;
+    pointer-events: none;
+}
+
+.captcha-target-label {
+    font-size: 9.5px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.18);
+    text-align: center;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    line-height: 1.4;
+    pointer-events: none;
+    transition: color 0.15s;
+}
+
+.captcha-target.drag-over {
+    border-color: rgba(232, 234, 240, 0.5);
+    background: rgba(232, 234, 240, 0.04);
+    box-shadow: 0 0 0 3px rgba(232, 234, 240, 0.08);
+    transform: scale(1.02);
+}
+.captcha-target.drag-over .captcha-target-icon {
+    opacity: 0.7;
+    transform: scale(1.2);
+}
+.captcha-target.drag-over .captcha-target-label {
+    color: rgba(232, 234, 240, 0.7);
+}
+
+.captcha-target.drop-success {
+    border-style: solid;
+    border-color: rgba(76, 175, 125, 0.5);
+    background: rgba(76, 175, 125, 0.05);
+    box-shadow: 0 0 0 3px rgba(76, 175, 125, 0.08);
+    animation: dropSuccess 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes dropSuccess {
+    0%   { transform: scale(0.95); }
+    60%  { transform: scale(1.04); }
+    100% { transform: scale(1); }
+}
+
+.captcha-drag-ghost {
+    position: fixed;
+    pointer-events: none;
+    z-index: 999999;
+    border-radius: 10px;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.65), 0 0 0 2px rgba(232, 234, 240, 0.3);
+    opacity: 0.9;
+    transform: scale(1.07) rotate(1.2deg);
+    overflow: hidden;
+    background: #0a0a0b;
+}
+.captcha-drag-ghost svg { display: block; pointer-events: none; }
+
+.captcha-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 7px;
+    margin-bottom: 14px;
+}
+
+.captcha-opt-btn {
+    padding: 10px 6px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.13s, border-color 0.13s, color 0.13s, transform 0.1s;
+    letter-spacing: 0.02em;
+    text-align: center;
+    line-height: 1.3;
+}
+.captcha-opt-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.9);
+    transform: translateY(-1px);
+}
+.captcha-opt-btn:active:not(:disabled) { transform: translateY(0); }
+.captcha-opt-btn:disabled { cursor: default; opacity: 0.3; }
+
+.captcha-opt-btn.captcha-opt-correct {
+    background: rgba(76, 175, 125, 0.08);
+    border-color: rgba(76, 175, 125, 0.4);
+    color: #6dbf95;
+    opacity: 1 !important;
+    animation: optCorrect 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes optCorrect {
+    0%   { transform: scale(0.93); }
+    60%  { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.captcha-opt-btn.captcha-opt-wrong {
+    background: rgba(224, 85, 85, 0.07);
+    border-color: rgba(224, 85, 85, 0.3);
+    color: #e87878;
+    opacity: 1 !important;
+    animation: optWrong 0.25s ease;
+}
+@keyframes optWrong {
+    0%, 100% { transform: translateX(0); }
+    25%      { transform: translateX(-5px); }
+    75%      { transform: translateX(5px); }
+}
+
+.captcha-spinner {
+    width: 22px;
+    height: 22px;
+    border: 2.5px solid rgba(255, 255, 255, 0.05);
+    border-top-color: rgba(232, 234, 240, 0.5);
+    border-radius: 50%;
+    animation: captchaSpin 0.7s linear infinite;
+}
+@keyframes captchaSpin { to { transform: rotate(360deg); } }
+
+.captcha-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 18px 13px;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    background: rgba(0, 0, 0, 0.15);
+}
+
+.captcha-hint {
+    font-size: 11.5px;
+    color: rgba(255, 255, 255, 0.25);
+    letter-spacing: 0.01em;
+    line-height: 1.4;
+    min-height: 1em;
+    transition: color 0.18s;
+}
+.captcha-hint.hint-error   { color: rgba(224, 85, 85, 0.7); }
+.captcha-hint.hint-success { color: rgba(76, 175, 125, 0.7); }
+
+.captcha-privacy {
+    font-size: 10.5px;
+    color: rgba(255, 255, 255, 0.13);
+    letter-spacing: 0.02em;
+}
+
+@media (max-width: 480px) {
+    .navbar { padding: 1rem 1.2rem; }
+    .captcha-box    { border-radius: 12px 12px 0 0; }
+    .captcha-body   { padding: 14px 14px 0; }
+    .captcha-footer { padding: 10px 14px 12px; }
+    .captcha-target { width: 72px; }
+    .captcha-opt-btn { font-size: 11px; padding: 9px 5px; }
+}

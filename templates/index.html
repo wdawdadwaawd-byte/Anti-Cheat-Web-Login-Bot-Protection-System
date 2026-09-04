@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WASDW Marketplace - Oyun Hesapları & Dijital Varlıklar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0c;
+            --bg-elevated: #121215;
+            --bg-card: #16161a;
+            --bg-card-hover: #1c1c21;
+            --border: rgba(255,255,255,0.06);
+            --border-soft: rgba(255,255,255,0.09);
+            --text: #f4f4f6;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent: #fafafa;
+            --green: #4ade80;
+            --radius-xl: 28px;
+            --radius-lg: 22px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+            --radius-full: 9999px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { overflow-x: hidden; }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+        .bg-glow {
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 90% 60% at 50% -30%, rgba(255,255,255,0.045), transparent 60%),
+                radial-gradient(ellipse 50% 40% at 90% 10%, rgba(255,255,255,0.025), transparent);
+            pointer-events: none;
+            z-index: 0;
+        }
+        /* ── Navbar ── */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.75rem;
+            background: rgba(10,10,12,0.72);
+            backdrop-filter: blur(20px) saturate(140%);
+            -webkit-backdrop-filter: blur(20px) saturate(140%);
+            border-bottom: 1px solid var(--border);
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-weight: 800;
+            font-size: 1.2rem;
+            letter-spacing: -0.03em;
+            color: var(--text);
+            text-decoration: none;
+        }
+        .brand-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-soft);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+        }
+        .brand .dot { color: var(--text-secondary); font-weight: 600; }
+        .nav-links { display: flex; align-items: center; gap: 0.4rem; }
+        .nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 0.55rem 1rem;
+            border-radius: var(--radius-full);
+            transition: all 0.2s ease;
+        }
+        .nav-link:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+        .nav-link.active { color: var(--text); background: rgba(255,255,255,0.07); }
+
+        /* ── Slide transition ── */
+        @keyframes slide-out-left  { from { opacity:1; transform: translateX(0);     } to { opacity:0; transform: translateX(-38px); } }
+        @keyframes slide-out-right { from { opacity:1; transform: translateX(0);     } to { opacity:0; transform: translateX(38px);  } }
+        @keyframes slide-in-left   { from { opacity:0; transform: translateX(38px);  } to { opacity:1; transform: translateX(0);     } }
+        @keyframes slide-in-right  { from { opacity:0; transform: translateX(-38px); } to { opacity:1; transform: translateX(0);     } }
+
+        .page-slide-out-left  { animation: slide-out-left  0.32s cubic-bezier(0.4,0,0.2,1) forwards; }
+        .page-slide-out-right { animation: slide-out-right 0.32s cubic-bezier(0.4,0,0.2,1) forwards; }
+        .page-slide-in-left   { animation: slide-in-left   0.32s cubic-bezier(0.4,0,0.2,1) forwards; }
+        .page-slide-in-right  { animation: slide-in-right  0.32s cubic-bezier(0.4,0,0.2,1) forwards; }
+
+        body.is-transitioning { overflow: hidden; }
+
+        /* Aktif nav link indicator */
+        .nav-links { position: relative; }
+        .nav-slide-indicator {
+            position: absolute;
+            bottom: -2px;
+            height: 2px;
+            background: rgba(255,255,255,0.25);
+            border-radius: 99px;
+            transition: left 0.35s cubic-bezier(0.4,0,0.2,1), width 0.35s cubic-bezier(0.4,0,0.2,1);
+            pointer-events: none;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            padding: 0.55rem 1.15rem;
+            border-radius: var(--radius-full);
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-ghost {
+            color: var(--text-secondary);
+            background: transparent;
+            border: 1px solid var(--border-soft);
+        }
+        .btn-ghost:hover {
+            color: var(--text);
+            background: rgba(255,255,255,0.04);
+            border-color: rgba(255,255,255,0.12);
+        }
+        .btn-solid { background: var(--accent); color: #0a0a0c; }
+        .btn-solid:hover {
+            background: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(255,255,255,0.12);
+        }
+        /* ── Hero ── */
+        .hero {
+            text-align: center;
+            padding: 4rem 1.5rem 2.75rem;
+            max-width: 720px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        .hero-title {
+            font-size: clamp(2rem, 5vw, 2.75rem);
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            line-height: 1.12;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+        .hero-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.08rem;
+            font-weight: 400;
+            max-width: 480px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.55;
+        }
+        .category-pills { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.6rem; }
+        .category-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--radius-full);
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            text-decoration: none;
+            transition: all 0.22s ease;
+        }
+        .category-pill:hover {
+            color: var(--text);
+            background: var(--bg-card-hover);
+            border-color: var(--border-soft);
+            transform: translateY(-1px);
+        }
+        .category-pill.active {
+            color: #0a0a0c;
+            background: var(--accent);
+            border-color: var(--accent);
+            box-shadow: 0 4px 16px rgba(255,255,255,0.1);
+        }
+        /* ── Market Grid ── */
+        .market-section {
+            max-width: 1200px;
+            margin: 0 auto 5rem;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        .market-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 1.4rem;
+        }
+        .product-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 1.4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 1.1rem;
+            transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .product-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.08), transparent 50%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            background: var(--bg-card-hover);
+            border-color: var(--border-soft);
+            box-shadow: 0 20px 40px -12px rgba(0,0,0,0.5);
+        }
+        .product-card:hover::before { opacity: 1; }
+        .product-badge {
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            background: rgba(255,255,255,0.05);
+            padding: 0.3rem 0.7rem;
+            border-radius: var(--radius-full);
+            margin-bottom: 0.7rem;
+        }
+        .product-title {
+            font-size: 1.02rem;
+            font-weight: 650;
+            line-height: 1.4;
+            color: var(--text);
+            margin-bottom: 0.85rem;
+            letter-spacing: -0.01em;
+        }
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            gap: 0.5rem;
+        }
+        .product-meta .seller { display: flex; align-items: center; gap: 0.3rem; }
+        .product-meta .tag {
+            color: var(--text-secondary);
+            font-weight: 500;
+            background: rgba(255,255,255,0.04);
+            padding: 0.2rem 0.55rem;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+        }
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1.1rem;
+            border-top: 1px solid var(--border);
+        }
+        .product-price {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--green);
+            letter-spacing: -0.03em;
+        }
+        .btn-buy {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.55rem 1.15rem;
+            border-radius: var(--radius-full);
+            font-size: 0.84rem;
+            font-weight: 700;
+            background: var(--accent);
+            color: #0a0a0c;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-buy:hover {
+            background: #fff;
+            transform: scale(1.03);
+            box-shadow: 0 6px 18px rgba(255,255,255,0.15);
+        }
+        @media (max-width: 700px) {
+            .navbar { padding: 0.85rem 1.1rem; flex-wrap: wrap; gap: 0.75rem; }
+            .nav-links { width: 100%; justify-content: flex-end; flex-wrap: wrap; gap: 0.35rem; }
+            .hero { padding: 3rem 1.25rem 2.25rem; }
+            .market-section { padding: 0 1.1rem; }
+            .market-grid { gap: 1.1rem; }
+            .product-card { border-radius: var(--radius-lg); padding: 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="brand">
+            <div class="brand-icon">W</div>
+            <span>WASDW<span class="dot">.MARKET</span></span>
+        </a>
+        <div class="nav-links">
+            <a href="/" class="nav-link active" data-page-order="0">Pazar Yeri</a>
+            <a href="/login" class="nav-link" data-page-order="1">Giriş Yap</a>
+            <a href="/register" class="nav-link" data-page-order="2">Kayıt Ol</a>
+            <a href="/admin" class="btn btn-ghost">SOC</a>
+            <span class="nav-slide-indicator" id="navIndicator"></span>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <h1 class="hero-title">Dijital Varlıklar &<br>Oyun Pazar Yeri</h1>
+        <p class="hero-subtitle">En popüler oyun hesapları, itemler ve gift kartları. Güvenli ve hızlı ticaret.</p>
+        <div class="category-pills">
+            <a href="#" class="category-pill active">Tümü</a>
+            <a href="#" class="category-pill">Valorant</a>
+            <a href="#" class="category-pill">CS2 Skin</a>
+            <a href="#" class="category-pill">LoL</a>
+            <a href="#" class="category-pill">GTA 5</a>
+            <a href="#" class="category-pill">Steam</a>
+        </div>
+    </header>
+
+    <section class="market-section">
+        <div class="market-grid">
+            <div class="product-card">
+                <div>
+                    <span class="product-badge">Valorant</span>
+                    <h2 class="product-title">Radiant Rank + Champions 2024 Vandal & Kuronami</h2>
+                    <div class="product-meta">
+                        <span class="seller">542 satış</span>
+                        <span class="tag">Anında Teslimat</span>
+                    </div>
+                </div>
+                <div class="product-footer">
+                    <span class="product-price">$349.00</span>
+                    <a href="/login" class="btn-buy">Satın Al</a>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div>
+                    <span class="product-badge">CS2 Skins</span>
+                    <h2 class="product-title">★ Karambit | Doppler Phase 2 · 0.01 Float FN</h2>
+                    <div class="product-meta">
+                        <span class="seller">1.120 satış</span>
+                        <span class="tag">Takas Açık</span>
+                    </div>
+                </div>
+                <div class="product-footer">
+                    <span class="product-price">$820.00</span>
+                    <a href="/login" class="btn-buy">Satın Al</a>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div>
+                    <span class="product-badge">Steam Gift</span>
+                    <h2 class="product-title">100 USD Steam Global Dijital Hediye Kodu</h2>
+                    <div class="product-meta">
+                        <span class="seller">8.900 satış</span>
+                        <span class="tag">Otomatik Kod</span>
+                    </div>
+                </div>
+                <div class="product-footer">
+                    <span class="product-price">$88.50</span>
+                    <a href="/login" class="btn-buy">Satın Al</a>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div>
+                    <span class="product-badge">League of Legends</span>
+                    <h2 class="product-title">Challenger 800 LP + Tüm Şampiyonlar & 280+ Kostüm</h2>
+                    <div class="product-meta">
+                        <span class="seller">310 satış</span>
+                        <span class="tag">Doğrulanmış</span>
+                    </div>
+                </div>
+                <div class="product-footer">
+                    <span class="product-price">$490.00</span>
+                    <a href="/login" class="btn-buy">Satın Al</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="/static/js/particles-bg.js"></script>
+    {% for f in all_dist %}<script src="/static/js/dist/{{ f }}?v={{ loader_v }}"></script>{% endfor %}
+    {% if not all_dist %}{% if shield_js %}<script src="/static/js/dist/{{ shield_js }}?v={{ loader_v }}"></script>{% endif %}<script src="/static/js/dist/{{ loader_js }}?v={{ loader_v }}"{% if loader_integrity %} integrity="{{ loader_integrity }}" crossorigin="anonymous"{% endif %}></script>{% endif %}
+    <script src="/static/js/behavioral-collector.js"></script>
+    <script src="/static/js/evidence-collector.js"></script>
+    <script src="/static/js/marketplace-ui.js"></script>
+
+    <script>
+    // ===== NAV SLIDE TRANSITION =====
+    (function() {
+        const PAGE_ORDER = { '/': 0, '/login': 1, '/register': 2 };
+        const currentPath = location.pathname.replace(/\/$/, '') || '/';
+        const currentOrder = PAGE_ORDER[currentPath] ?? 0;
+
+        const mainEl = document.querySelector('header.hero') ? document.body : (document.querySelector('.main-container') || document.querySelector('main') || document.body);
+        // index'te tüm içerik body'de olduğu için hero+section'ı saran wrapper oluştur
+        const heroEl   = document.querySelector('.hero');
+        const marketEl = document.querySelector('.market-section');
+        const wrapTarget = (heroEl && marketEl) ? (() => {
+            const wrap = document.createElement('div');
+            wrap.id = 'pageSlideWrap';
+            heroEl.parentNode.insertBefore(wrap, heroEl);
+            wrap.appendChild(heroEl);
+            wrap.appendChild(marketEl);
+            return wrap;
+        })() : (document.querySelector('.main-container') || document.body);
+
+        function positionIndicator() {
+            const indicator = document.getElementById('navIndicator');
+            if (!indicator) return;
+            const active = document.querySelector('.nav-links .nav-link.active');
+            if (!active) return;
+            const navRect  = document.querySelector('.nav-links').getBoundingClientRect();
+            const linkRect = active.getBoundingClientRect();
+            indicator.style.left  = (linkRect.left - navRect.left) + 'px';
+            indicator.style.width = linkRect.width + 'px';
+        }
+        window.addEventListener('load', positionIndicator);
+        window.addEventListener('resize', positionIndicator);
+
+        document.querySelectorAll('.nav-links .nav-link[data-page-order]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (!href || href === '#') return;
+                const targetOrder = PAGE_ORDER[href] ?? currentOrder;
+                if (targetOrder === currentOrder) return;
+                e.preventDefault();
+                const goRight = targetOrder > currentOrder;
+                document.querySelectorAll('.nav-links .nav-link').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                positionIndicator();
+                document.body.classList.add('is-transitioning');
+                wrapTarget.classList.add(goRight ? 'page-slide-out-left' : 'page-slide-out-right');
+                setTimeout(() => { window.location.href = href; }, 300);
+            });
+        });
+
+        // Giriş animasyonu
+        const inClass = (() => {
+            const ref = document.referrer;
+            if (!ref) return null;
+            try {
+                const refPath = new URL(ref).pathname.replace(/\/$/, '') || '/';
+                const refOrder = PAGE_ORDER[refPath] ?? -1;
+                if (refOrder < 0) return null;
+                return refOrder < currentOrder ? 'page-slide-in-left' : 'page-slide-in-right';
+            } catch { return null; }
+        })();
+
+        if (inClass) {
+            document.body.classList.add('is-transitioning');
+            wrapTarget.classList.add(inClass);
+            wrapTarget.addEventListener('animationend', () => {
+                wrapTarget.classList.remove(inClass);
+                document.body.classList.remove('is-transitioning');
+            }, { once: true });
+        }
+    })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{
+  "parts": [
+    "WASD-core-V32fd819e.js",
+    "WASD-core-Vb5d21ada.js",
+    "WASD-core-V8b69b696.js"
+  ],
+  "ts": 1788478234,
+  "wasm_vm": "vm_transform.wasm",
+  "loader": "WASD-core-V486e8845.js",
+  "fake_loader": "WASD-Loader-V6086e8b2.js",
+  "loader_integrity": "sha384-hxPuEPLK20QrBZiSp9ImqOJUmVRWnl0j7i7LgMdOpFjQfvdY6Zt7sam8pEpqUtZL",
+  "sc_key": "_we63c7c3fe24f3ac8",
+  "scr_key": "_w4cb25d3a6125fd50",
+  "ev_key": "__wasd_2700e14af832",
+  "nonce_cap": "_wasd_nc_d51b7ca9",
+  "session_cap": "_wasd_sc_f94ad4ae",
+  "honeypot_paths": [
+    "/api/watch/node-bc775b",
+    "/api/security/tick-684e21",
+    "/api/check/snap-d5f069",
+    "/api/shield/tap-3fd639",
+    "/api/check/ack-3d3da6",
+    "/api/audit/ping-b91665",
+    "/api/check/tag-95fd3e"
+  ],
+  "puzzle": "WASD-core-V38029778.js",
+  "puzzle_decoy": "WASD-core-Vac17be9e.js"
+}
